@@ -37,22 +37,25 @@ jobs:
       - name: Calculate build number
         id: build-number
         run: |
+          cd PocketMine-MP-5.2.1
           BUILD_NUMBER=$((2000+$GITHUB_RUN_NUMBER)) #to stay above jenkins
           echo "Build number: $BUILD_NUMBER"
           echo BUILD_NUMBER=$BUILD_NUMBER >> $GITHUB_OUTPUT
 
       - name: Minify BedrockData JSON files
         run: |
-          pwd
+          cd PocketMine-MP-5.2.1
           php vendor/pocketmine/bedrock-data/.minify_json.php
 
       - name: Build PocketMine-MP.phar
-        run: php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.build-number.outputs.BUILD_NUMBER }}
+        run: |
+          cd PocketMine-MP-5.2.1
+          php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.build-number.outputs.BUILD_NUMBER }}
 
       - name: Get PocketMine-MP release version
         id: get-pm-version
         run: |
-          pwd
+          cd PocketMine-MP-5.2.1
           echo PM_VERSION=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::BASE_VERSION;') >> $GITHUB_OUTPUT
           echo MCPE_VERSION=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\network\mcpe\protocol\ProtocolInfo::MINECRAFT_VERSION_NETWORK;') >> $GITHUB_OUTPUT
           echo PM_VERSION_SHORT=$(php -r 'require "vendor/autoload.php"; $v = explode(".", \pocketmine\VersionInfo::BASE_VERSION); array_pop($v); echo implode(".", $v);') >> $GITHUB_OUTPUT
@@ -63,4 +66,5 @@ jobs:
       - name: Generate PHP binary download URL
         id: php-binary-url
         run: |
+          cd PocketMine-MP-5.2.1
           echo PHP_BINARY_URL="${{ github.server_url }}/${{ github.repository_owner }}/PHP-Binaries/releases/tag/php-8.1-latest" >> $GITHUB_OUTPUT
