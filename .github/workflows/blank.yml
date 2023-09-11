@@ -68,18 +68,6 @@ jobs:
         run: |
           cd PocketMine-MP-5.2.1
           echo PHP_BINARY_URL="${{ github.server_url }}/${{ github.repository_owner }}/PHP-Binaries/releases/tag/php-8.1-latest" >> $GITHUB_OUTPUT
-          
-      - name: Generate build info
-        run: |
-          cd PocketMine-MP-5.2.1
-          php build/generate-build-info-json.php \
-            ${{ github.sha }} \
-            ${{ steps.get-pm-version.outputs.PM_VERSION }} \
-            ${{ github.repository }} \
-            ${{ steps.build-number.outputs.BUILD_NUMBER }} \
-            ${{ github.run_id }} \
-            ${{ steps.php-binary-url.outputs.PHP_BINARY_URL }} \
-            > build_info.json
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v3
@@ -88,12 +76,11 @@ jobs:
           path: |
             ${{ github.workspace }}/PocketMine-MP-5.2.1/PocketMine-MP.phar
             ${{ github.workspace }}/PocketMine-MP-5.2.1/start.*
-            ${{ github.workspace }}/PocketMine-MP-5.2.1/build_info.json
 
       - name: Create draft release
         uses: ncipollo/release-action@v1.13.0
         with:
-          artifacts: ${{ github.workspace }}/PocketMine-MP.phar,${{ github.workspace }}/start.*,${{ github.workspace }}/build_info.json
+          artifacts: ${{ github.workspace }}/PocketMine-MP-5.2.1/PocketMine-MP.phar,${{ github.workspace }}/PocketMine-MP-5.2.1/start.*
           commit: ${{ github.sha }}
           draft: false
           prerelease: ${{ steps.get-pm-version.outputs.PRERELEASE }}
