@@ -1,0 +1,20 @@
+name: Compile 
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Tag
+        run: |
+          wget https://github.com/pmmp/PocketMine-MP/archive/refs/tags/5.2.1.zip
+          unzip 5.2.1.zip
+          ls
+        
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
