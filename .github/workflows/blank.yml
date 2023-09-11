@@ -30,7 +30,9 @@ jobs:
             composer-v2-cache-
 
       - name: Install Composer dependencies
-        run: composer install --no-dev --prefer-dist --no-interaction --ignore-platform-reqs
+        run: |
+          cd PocketMine-MP-5.2.1
+          composer install --no-dev --prefer-dist --no-interaction --ignore-platform-reqs
         
       - name: Calculate build number
         id: build-number
@@ -41,7 +43,7 @@ jobs:
 
       - name: Minify BedrockData JSON files
         run: |
-          cd PocketMine-MP-5.2.1
+          pwd
           php vendor/pocketmine/bedrock-data/.minify_json.php
 
       - name: Build PocketMine-MP.phar
